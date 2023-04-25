@@ -43,7 +43,7 @@ uint16_t ecgValue;
 
 #pragma region BLE Information Setup
 BLEService ecgService(deviceServiceUuid); 
-BLELongCharacteristic ecgCharacteristic(deviceServiceCharacteristicUuid, BLERead | BLEWrite);
+BLEUnsignedShortCharacteristic ecgCharacteristic(deviceServiceCharacteristicUuid, BLERead | BLEWrite);
 #pragma endregion
 
 #pragma region Signal Filters
@@ -158,7 +158,7 @@ void loop() {
     rightLeg = 0;
     while (central.connected()) {
       if (ecgCharacteristic.written()) {
-         ecgValue = (uint16_t) ((int)ecgCharacteristic.value()); //casting directly to uint16_t gave issues, cast to int and then uint16_t
+         ecgValue = (uint16_t) ecgCharacteristic.value();
          //reads written BLE value
          VoltageOutput(ecgValue, &leftArm, &rightArm, &rightLeg, maxOutput, 0.3);
          analogWrite(leftArmPin, leftArm);
